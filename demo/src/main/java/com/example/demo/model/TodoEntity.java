@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 public class TodoEntity {
 	private String id;
+	private String title;
+	private boolean done;
+	private String userId;
 	public String getId() {
 		return id;
 	}
@@ -35,7 +38,12 @@ public class TodoEntity {
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
-	private String title;
-	private boolean done;
-	private String userId;
+	public TodoEntity(String id, String title, boolean done, String userId) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.done = done;
+		this.userId = userId;
+	}
+	
 }
