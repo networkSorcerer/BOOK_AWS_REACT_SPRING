@@ -1,5 +1,12 @@
 package com.example.demo.model;
 
+//import org.hibernate.annotations.GenericGenerator; 예전버전이어서 사용이 권장되지 않음
+import org.hibernate.annotations.UuidGenerator;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,41 +16,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Entity
+@Table(name="Todo")
 public class TodoEntity {
+	@Id
+	@GeneratedValue(generator="system-uuid")
+	//@GenericGenerator(name="system-uuid", strategy="uuid")
+	@UuidGenerator  
 	private String id;
 	private String title;
 	private boolean done;
 	private String userId;
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getTitle() {
-		return title;
-	}
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	public boolean isDone() {
-		return done;
-	}
-	public void setDone(boolean done) {
-		this.done = done;
-	}
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public TodoEntity(String id, String title, boolean done, String userId) {
-		super();
-		this.id = id;
-		this.title = title;
-		this.done = done;
-		this.userId = userId;
-	}
 	
 }

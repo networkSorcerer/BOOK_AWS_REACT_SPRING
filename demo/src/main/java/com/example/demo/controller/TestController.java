@@ -46,6 +46,7 @@ public class TestController {
     @GetMapping("/testResponseBody")
     public ResponseDTO<String> testControllerResponseBody() {
     	List<String> list = new ArrayList<>();
+    	list.add("Hello World! I'm ResponseDTO");
     	ResponseDTO<String> response = ResponseDTO.<String>builder().data(list).build();
     	return response;
     }
