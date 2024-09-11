@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,4 +72,44 @@ public class TodoController {
 		return ResponseEntity.ok().body(response);
 	}
 
+	@GetMapping
+	public ResponseEntity<?> retrieveTodoList() {
+		String temporaryUserId = "temporary-user";
+		
+		//(1) 서비스 메서드의 retrieve 메서드를 사용해 Todo 리스트를 가져온다
+		List<TodoEntity>entities = service.retrieve(temporaryUserId);
+		
+		//(2) 자바 스트림을 이용해 리턴된 엔티티 리스트를 TodoDTO 리스트로 변환한다.
+		List<TodoDTO> dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+		
+		//(6) 변환된 TodoDTO 리스트를 이용해 ResponseDTO를 초기화 한다
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+		
+		//ResponseDTO를 리턴한다
+		return ResponseEntity.ok().body(response);
+		
+	}
+	
+	@PutMapping
+	public ResponseEntity<?> updateTodo(@RequestBody TodoDTO dto) {
+		String temporaryUserId = "temporary-user"; // temporary user id
+		
+		//(1) dto를 entity로 변환한다
+		TodoEntity entity = TodoDTO.toEntity(dto);
+		
+		// (2) id 를 temporaryUserId로 초기화한다. 여기는 4장 인증과 인가에서 수정할 예정이다
+		entity.setUserId(temporaryUserId);
+		
+		// (3) 서비스를 이용해 entity를 업데이트한다
+		List<TodoEntity> entities = service.update(entity);
+		
+		// (4) 자바 스트림을 이용해 리턴된 엔티티 리스트를 TodoDTO 리스트로 변환한다
+		List<TodoDTO>dtos = entities.stream().map(TodoDTO::new).collect(Collectors.toList());
+		
+		// (5) 변환된 TodoDTO리스트를 이용해 ResponseDTO를 초기화한다
+		ResponseDTO<TodoDTO> response = ResponseDTO.<TodoDTO>builder().data(dtos).build();
+		
+		// (6) ResponseDTO를 리턴한다
+		return ResponseEntity.ok().body(response);
+	}
 }
