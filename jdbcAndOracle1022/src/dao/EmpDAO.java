@@ -134,35 +134,29 @@ public class EmpDAO {
         return false; // 업데이트 실패
     }
 
-    public boolean empDelete(EmpVO vo) {
-        String query = "DELETE FROM emp WHERE ename = ?";
+    public boolean empDelete(){
+        String query = "delete from emp where ename = ? ";
         Connection conn = null;
         PreparedStatement psmt = null;
-
+        Scanner sc = new Scanner(System.in);
+        System.out.println("삭제할 사원 이름을 입력하세요");
+        String ename =sc.next();
         try {
-            conn = Common.getConnection(); // Obtain a connection to the database
-            psmt = conn.prepareStatement(query); // Prepare the SQL query
-            psmt.setString(1, vo.getName()); // Set the name parameter
+            conn = Common.getConnection();
+            psmt =conn.prepareStatement(query);
+            psmt.setString(1,ename);
+            int ret = psmt.executeUpdate();
+            System.out.println("변경된 레코드 수: " + ret);
 
-            int affectedRows = psmt.executeUpdate(); // Execute the update query
-            return affectedRows > 0; // Return true if at least one row was deleted
-        } catch (SQLException e) {
-            throw new RuntimeException(e); // Handle SQL exceptions
-        } finally {
-            // Close resources to prevent memory leaks
-            try {
-                if (psmt != null) {
-                    psmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace(); // Handle potential closing exceptions
+            if (ret > 0) {
+                return true; // 업데이트 성공
             }
-        }
-    }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
 
+        }
+        return false;
+    }
 
     public void empSelectResult(List<EmpVO>list){
         System.out.println("---------------------------------------");
