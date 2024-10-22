@@ -1,7 +1,7 @@
 package com.example.demo;
 
-import io.micrometer.common.lang.NonNull;
 import lombok.Builder;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Builder
