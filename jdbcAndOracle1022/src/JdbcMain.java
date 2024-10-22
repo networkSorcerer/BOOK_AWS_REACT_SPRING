@@ -35,6 +35,11 @@ public class JdbcMain {
                     if (isSuccess1) System.out.println("사원 수정에 성공했습니다.");
                     else System.out.println("사원 수정에 실패했습니다.");
                     break;
+                case 4 :
+                    boolean isSuccess2 = dao.empDelete(empDelete());
+                    if(isSuccess2) System.out.println("사원 삭제에 성공하였습니다.");
+                    else System.out.println("사원 삭제에 실패했습니다.");
+                    break;
                 case 5:
                     System.out.println("프로그램을 종료합니다.");
                     return;
@@ -62,6 +67,13 @@ public class JdbcMain {
         System.out.println("부서 번호 : ");
         int deptNo = sc.nextInt();
         EmpVO vo = new EmpVO(empNo, name , job, mgr, Date.valueOf(date), sal, comm, deptNo);
+        return vo;
+    }
+    public static EmpVO empDelete() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("삭제할 사원 이름을 입력하세요");
+        String ename =sc.next();
+        EmpVO vo = new EmpVO(ename);
         return vo;
     }
 

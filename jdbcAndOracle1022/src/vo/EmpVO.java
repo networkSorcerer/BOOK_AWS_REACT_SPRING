@@ -32,6 +32,9 @@ public class EmpVO {
     public EmpVO() {
     }
 
+    public EmpVO(String ename) {
+    }
+
     public int getEmpNO() {
         return empNO;
     }

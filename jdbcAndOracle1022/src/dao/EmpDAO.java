@@ -134,9 +134,35 @@ public class EmpDAO {
         return false; // 업데이트 실패
     }
 
-    public void delete(){
-        
+    public boolean empDelete(EmpVO vo) {
+        String query = "DELETE FROM emp WHERE ename = ?";
+        Connection conn = null;
+        PreparedStatement psmt = null;
+
+        try {
+            conn = Common.getConnection(); // Obtain a connection to the database
+            psmt = conn.prepareStatement(query); // Prepare the SQL query
+            psmt.setString(1, vo.getName()); // Set the name parameter
+
+            int affectedRows = psmt.executeUpdate(); // Execute the update query
+            return affectedRows > 0; // Return true if at least one row was deleted
+        } catch (SQLException e) {
+            throw new RuntimeException(e); // Handle SQL exceptions
+        } finally {
+            // Close resources to prevent memory leaks
+            try {
+                if (psmt != null) {
+                    psmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace(); // Handle potential closing exceptions
+            }
+        }
     }
+
 
     public void empSelectResult(List<EmpVO>list){
         System.out.println("---------------------------------------");
