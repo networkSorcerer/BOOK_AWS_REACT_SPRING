@@ -18,12 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class TokenProvider {
-	@Value("${jwt.secret}")
-	private static String secretKey;
+	private static final String SECRET_KEY = "asdlkfjlkwejl203sdlkfl203isdjf09df";
 
-    // 비밀 키는 환경 변수나 설정 파일을 통해 안전하게 관리해야 합니다.
-    private static final String SECRET_KEY = secretKey;
-
+    
     /**
      * 사용자 정보를 기반으로 JWT 생성
      * 
@@ -31,10 +28,11 @@ public class TokenProvider {
      * @return 생성된 JWT 토큰
      */
     public String create(UserEntity userEntity) {
+    	
         // 기한을 지금으로부터 1일로 설정
         Date expiryDate = Date.from(
                 Instant.now().plus(1, ChronoUnit.DAYS));
-
+       
         // JWT Token 생성
         return Jwts.builder()
                 // header에 들어갈 내용 및 서명을 하기 위한 secret_key
@@ -45,6 +43,7 @@ public class TokenProvider {
                 .setIssuedAt(new Date()) // iat
                 .setExpiration(expiryDate) // exp
                 .compact();
+       
     }
 
     /**
