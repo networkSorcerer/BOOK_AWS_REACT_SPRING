@@ -1,9 +1,6 @@
 package com.example.demo.security;
 
-<<<<<<< HEAD
-public abstract class TokenProvider {
 
-=======
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -64,5 +61,5 @@ public class TokenProvider {
 
         return claims.getSubject();
     }
->>>>>>> ef2294caaa7ce2fa43673ebd368cd8c238f4c2b9
+
 }
