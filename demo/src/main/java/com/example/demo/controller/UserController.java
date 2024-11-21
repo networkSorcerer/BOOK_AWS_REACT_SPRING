@@ -19,12 +19,16 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/auth")
 public class UserController {
+	
 	@Autowired
 	private UserService userService;
+	
 	@Autowired
 	private TokenProvider tokenProvider;
+	
 	@PostMapping("/signup")
-	public ResponseEntity<?> registreUser(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) {
+		log.info("Attempting to register user: {}", userDTO.getUsername());
 		try {
 			if(userDTO == null || userDTO.getPassword() == null) {
 				throw new RuntimeException("Invalid Password value.");
