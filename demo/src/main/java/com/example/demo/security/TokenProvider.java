@@ -1,6 +1,5 @@
 package com.example.demo.security;
 
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -13,13 +12,15 @@ import com.example.demo.model.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
 public class TokenProvider {
+//	private static final String SECRET_KEY ="42032237LukeJohn!!!!!!!^^";
 	@Value("${jwt.secret}")
-	private String secretKey; // application.properties에서 키를 읽어옴
+	private String secretKey;
 
 
     
@@ -55,12 +56,23 @@ public class TokenProvider {
      * @return 사용자 ID
      */
     public String validateAndGetUserId(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)  // 서명 키를 설정
+                    .parseClaimsJws(token)     // JWT 파싱
+                    .getBody();
 
-        return claims.getSubject();
+            // 만료된 토큰일 경우 처리
+            if (claims.getExpiration().before(new Date())) {
+                throw new IllegalArgumentException("Token has expired");
+            }
+
+            return claims.getSubject();
+        } catch (SignatureException e) {
+            throw new RuntimeException("Invalid JWT signature", e);  // 서명 불일치
+        } catch (Exception e) {
+            throw new RuntimeException("JWT parsing error", e);  // 기타 예외 처리
+        }
     }
 
 }
