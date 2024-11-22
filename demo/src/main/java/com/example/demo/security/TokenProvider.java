@@ -59,7 +59,7 @@ public class TokenProvider {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)  // 서명 키를 설정
-                    .parseClaimsJws(token)     // JWT 파싱
+                    .parseClaimsJws(token)     // JWT 파싱 
                     .getBody();
 
             // 만료된 토큰일 경우 처리

@@ -9,6 +9,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.example.demo.security.JwtAuthenticationFilter;
 
+
 @Configuration
 public class WebSecurityConfig {
 
