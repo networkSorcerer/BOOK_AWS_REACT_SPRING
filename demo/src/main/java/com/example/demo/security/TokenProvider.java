@@ -18,9 +18,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class TokenProvider {
-//	private static final String SECRET_KEY ="42032237LukeJohn!!!!!!!^^";
-	@Value("${jwt.secret}")
-	private String secretKey;
+	private static final String SECRET_KEY ="42032237LukeJohn!!!!!!!^^";
+//	@Value("${jwt.secret}")
+//	private String secretKey;
 
 
     
@@ -39,7 +39,7 @@ public class TokenProvider {
         // JWT Token 생성
         return Jwts.builder()
                 // header에 들어갈 내용 및 서명을 하기 위한 secret_key
-                .signWith(SignatureAlgorithm.HS512, secretKey)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
                 // payload에 들어갈 내용
                 .setSubject(userEntity.getId()) // sub
                 .setIssuer("demo app") // iss
@@ -58,7 +58,7 @@ public class TokenProvider {
     public String validateAndGetUserId(String token) {
         try {
             Claims claims = Jwts.parser()
-                    .setSigningKey(secretKey)  // 서명 키를 설정
+                    .setSigningKey(SECRET_KEY)  // 서명 키를 설정
                     .parseClaimsJws(token)     // JWT 파싱 
                     .getBody();
 
