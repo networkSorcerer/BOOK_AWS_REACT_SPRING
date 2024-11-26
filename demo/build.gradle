@@ -37,6 +37,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     // Guava 라이브러리
     implementation 'com.google.guava:guava:31.1-jre'
@@ -55,6 +56,9 @@ dependencies {
 
     // MySQL 커넥터
     runtimeOnly 'mysql:mysql-connector-java:8.0.32'
+    // 실험용 thymeleaf
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
 }
 
 tasks.named('test') {
