@@ -47,10 +47,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // MySQL 커넥터
-    //implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	
-    runtimeOnly 'com.h2database:h2'
-    //implementation 'mysql:mysql-connector-java:8.0.34'
+    //runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
+	// 버전이 문제였던 거니?
 }
 
 tasks.named('test') {
