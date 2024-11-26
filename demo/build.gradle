@@ -1,8 +1,15 @@
-plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:3.3.4'
+    }
 }
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 group = 'com.example'
 version = '0.0.1'
@@ -30,7 +37,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	
+
     // Guava 라이브러리
     implementation 'com.google.guava:guava:31.1-jre'
 
@@ -47,10 +54,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // MySQL 커넥터
-	
-    //runtimeOnly 'com.h2database:h2'
-	runtimeOnly 'mysql:mysql-connector-java:8.0.32'
-	// 버전이 문제였던 거니?
+    runtimeOnly 'mysql:mysql-connector-java:8.0.32'
 }
 
 tasks.named('test') {
