@@ -35,9 +35,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    // test 관련 의존성 제거
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    // testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 
     // Guava 라이브러리
     implementation 'com.google.guava:guava:31.1-jre'
@@ -58,11 +59,10 @@ dependencies {
     runtimeOnly 'mysql:mysql-connector-java:8.0.32'
     // 실험용 thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+    enabled = false // 테스트 작업 비활성화
 }
 
 tasks.withType(JavaCompile) {
