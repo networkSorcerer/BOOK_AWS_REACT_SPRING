@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,34 +30,53 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter{
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		try {
-			// 요청에서 토큰 가져오기
-			String token = parseBearerToken(request);
-			log.info("Filter is running...");
-			//토큰 검사하기. Jwt 이므로 인가 서버에 요청하지 않고도 검증 가능
-			if (token != null && !token.equalsIgnoreCase("null")) {
-				// userId 가져오기 . 위조된 경우 예외처리된다.
-				String userId = tokenProvider.validateAndGetUserId(token);
-				log.info("Authenticated user ID : " + userId);
-				// 인증 완료; SequrityContextHolder에 등록해야 인증된 사용자라고 생각한다.
-				AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userId, // 인증된 사용자의 정보, 문자열이 아니어도 아무거나 넣을수 있다. 보통 UserDetail라는 오브젝트를 넣는데, 우리는 안 만들었음 
-						null, //
-						AuthorityUtils.NO_AUTHORITIES
-						);
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-				SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-				securityContext.setAuthentication(authentication);
-				SecurityContextHolder.setContext(securityContext);
-				
-			}
-		}catch(Exception ex) {
-			logger.error("Could not set user authentication in security context", ex);
-		}
-		filterChain.doFilter(request, response);
+	        throws ServletException, IOException {
+	    try {
+	        // 요청에서 토큰 가져오기
+	        String token = parseBearerToken(request);
+	        log.info("Filter is running...");
+
+	        if (token != null && !token.equalsIgnoreCase("null")) {
+	            // userId 가져오기
+	            String userId = tokenProvider.validateAndGetUserId(token);
+	            log.info("Authenticated user ID: " + userId);
+
+	            if (userId != null) {
+	                // 인증 객체 생성
+	                AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+	                        userId,  // userId가 null이 아닌지 확인
+	                        null,    // 패스워드가 없으므로 null
+	                        AuthorityUtils.NO_AUTHORITIES
+	                );
+	                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+	                
+	                // SecurityContext에 인증 객체 설정
+	                SecurityContext securityContext = SecurityContextHolder.getContext(); // 기존 SecurityContext 가져오기
+	                securityContext.setAuthentication(authentication);
+	                SecurityContextHolder.setContext(securityContext);
+	                log.info("User authentication set in security context.");
+	            } else {
+	                log.error("User ID is null. Cannot authenticate.");
+	                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+	            }
+	        }
+	    } catch (SignatureException ex) {
+	        logger.error("Invalid JWT signature", ex);
+	        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT signature");
+	    } catch (ExpiredJwtException ex) {
+	        logger.error("Expired JWT token", ex);
+	        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Expired JWT token");
+	    } catch (JwtException ex) {
+	        logger.error("JWT parsing error", ex);
+	        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT parsing error");
+	    } catch (Exception ex) {
+	        logger.error("Could not set user authentication in security context", ex);
+	        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Internal server error");
+	    }
+
+	    filterChain.doFilter(request, response);
 	}
+
 	private String parseBearerToken(HttpServletRequest request) {
 		// Http 요청의 헤더를 파싱해 Bearer 토근을 리턴한다
 		String bearerToken = request.getHeader("Authorization");

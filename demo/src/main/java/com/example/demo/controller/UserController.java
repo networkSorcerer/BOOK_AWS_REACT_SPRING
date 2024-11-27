@@ -65,6 +65,7 @@ public class UserController {
 		if(user != null) {
 			// 토큰 생성
 			final String token = tokenProvider.create(user);
+			 log.info("Generated token: " + token);
 			final UserDTO responseUserDTO = UserDTO.builder()
 					.username(user.getUsername())
 					.id(user.getId())
