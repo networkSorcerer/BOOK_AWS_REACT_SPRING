@@ -70,6 +70,7 @@ public class UserController {
 					.id(user.getId())
 					.token(token)
 					.build();
+			log.info("Returning response: {}", responseUserDTO);  // 응답을 로그로 출력
 			return ResponseEntity.ok().body(responseUserDTO);
 	
 		} else {
